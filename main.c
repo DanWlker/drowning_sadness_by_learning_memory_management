@@ -1,6 +1,9 @@
 #include <stdio.h>
 
-int main(int argc, char *argv[]) {
-  printf("Hello, world!\n");
-  return 0;
+#include "src/exercise.h"
+#include "src/thing.h"
+
+int main() {
+  printf("%f\n", get_average(4, 3, 4));
+  printf("%s\n", shout());
 }
