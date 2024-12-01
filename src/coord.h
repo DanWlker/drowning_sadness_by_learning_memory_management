@@ -7,18 +7,23 @@ typedef struct Coordinate {
 } coordinate_t ;
 
 typedef struct {
-	char Data1;
-	short Data2;
-	int Data3;
-	char Data4;
+	char a;
+	double b;
+	char c;
+	char d;
+	long e;
+	char f;
 } another_struct_t;
 
 
+// As a rule of thumb, ordering your fields from largest to smallest will help the compiler minimize padding:
 typedef struct {
-	char Data4;
-	char Data1;
-	short Data2;
-	int Data3;
+	double b;
+	long e;
+	char a;
+	char c;
+	char d;
+	char f;
 } another_struct_t_aligned ;
 
 coordinate_t new_coord(int x, int y, int z);

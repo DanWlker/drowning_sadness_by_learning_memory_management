@@ -19,10 +19,10 @@ int main() {
   preferred = new_coord(1, 2, 3);
   printf("size = %zu\n", sizeof(preferred));
 
-  another_struct_t another_thing = {'c', 2, 2.0};
+  another_struct_t another_thing = {0};
   printf("size another = %zu\n", sizeof(another_thing));
 
-  another_struct_t_aligned another_thing_aligned = {'c', 2, 2.0};
+  another_struct_t_aligned another_thing_aligned = {0};
   printf("size another = %zu\n", sizeof(another_thing_aligned));
 
   int i = preferred.y;
