@@ -24,6 +24,9 @@ int main() {
 
   another_struct_t_aligned another_thing_aligned = {0};
   printf("size another = %zu\n", sizeof(another_thing_aligned));
+  printf("address = %p\n", &another_thing_aligned);
+  long long thingy = 2;
+  printf("size address another = %zu\n", size_of_addr(thingy));
 
   int i = preferred.y;
   do {

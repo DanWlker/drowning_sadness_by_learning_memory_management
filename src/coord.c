@@ -17,3 +17,7 @@ struct Coordinate scale_coordinate(struct Coordinate coord, int factor) {
   };
   return res;
 }
+unsigned long size_of_addr(long long i) {
+  unsigned long sizeof_snek_version = sizeof(i);
+  return sizeof_snek_version;
+}

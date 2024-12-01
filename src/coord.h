@@ -29,3 +29,5 @@ typedef struct {
 coordinate_t new_coord(int x, int y, int z);
 
 coordinate_t scale_coordinate(struct Coordinate coord, int factor);
+
+unsigned long size_of_addr(long long i);
