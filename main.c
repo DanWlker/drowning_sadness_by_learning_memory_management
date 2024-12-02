@@ -34,5 +34,21 @@ int main() {
     i++;
   } while (i < 5);
 
+  int numbers[5] = {10, 11, 12, 13, 14};
+  for (int i = 0; i < 5; ++i) {
+    printf("%d", numbers[i]);
+  }
+  printf("\n");
+
+  int* numbers_prt = numbers;
+  int value = *(numbers + 2);
+  value = *(numbers_prt + 2);
+  value = 2 [numbers_prt];  // because why not
+  value = 2 [numbers];      // because why not
+  int* p = numbers + 2;
+  p = &numbers[2];
+  value = *p;
+  printf("%d", value);
+
   return 0;
 }
