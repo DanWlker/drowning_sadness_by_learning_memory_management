@@ -1,9 +1,35 @@
 #include <stdbool.h>  // wtf? this is needed?
 #include <stdint.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "src/coord.h"
 #include "src/exercise.h"
+
+typedef struct {
+  size_t length;
+  char buffer[64];
+} TextBuffer;
+int smart_append(TextBuffer* dest, const char* src) {
+  if (!src || !dest) {
+    return 1;
+  }
+  return 0;
+}
+
+void concat_strings(char* str1, const char* str2) {
+  while (*str1 != '\0') {
+    str1 = str1 + 1;
+  }
+
+  while (*str2 != '\0') {
+    *str1 = *str2;
+    str2 = str2 + 1;
+    str1 = str1 + 1;
+  }
+
+  *str1 = '\0';
+}
 
 int main() {
   struct Coordinate c = {0};
@@ -49,6 +75,50 @@ int main() {
   p = &numbers[2];
   value = *p;
   printf("%d", value);
+
+  coordinate_t points[3] = {
+      {1, 2, 3},
+      {4, 5, 6},
+      {7, 8, 9},
+  };
+
+  int* points_start = (int*)points;  // because why fuckin not
+  for (int i = 0; i < 9; i++) {
+    printf("%d: %d\n", i, points_start[i]);
+  }
+
+  int* intPtr;
+  printf("Size of int pointer: %zu bytes\n", sizeof(intPtr));
+
+  int intArray[10];
+  printf("Size of int array: %zu bytes\n", sizeof(intArray));
+
+  int* intArray2[5];
+  intArray2[0] = &value;
+
+  char str1[] = "Hi";  // because why not
+  char* str2 = "snek";
+
+  char first[50] = "Snek";
+  char* second = "lang!";
+  strcat(first, second);
+  printf("Hello, %s\n", first);
+
+  char one[50] = "Hi, ";
+  char* two = "MY";
+  concat_strings(one, two);
+  printf("%s", one);
+
+  char src[] = "Hello";
+  char dest[6];
+  strncpy(dest, src, 3);
+  dest[3] = '\0';
+  printf("%s\n", src);
+  printf("%s\n", dest);
+
+  TextBuffer thingBuffer = {0};
+  int a = smart_append(NULL, src);
+  printf("%d", a);
 
   return 0;
 }
