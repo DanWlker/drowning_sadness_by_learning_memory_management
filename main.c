@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 typedef struct {
   int x;
@@ -12,12 +13,18 @@ coord_t new_coords(int x, int y) {
   return c;
 }
 
-int main() {
-  coord_t c1 = new_coords(10, 20);
-  coord_t c2 = new_coords(30, 40);
-  coord_t c3 = new_coords(50, 60);
+char *get_full_greeting(char *greeting, char *name, int size) {
+  char *new_arr = (char *)malloc(size * sizeof(char));
+  if (new_arr == NULL) {
+    fprintf(stderr, "Memory allocation failed\n");
+    exit(1);
+  }
+  snprintf(new_arr, size, "%s %s", name, greeting);
+  return new_arr;
+}
 
-  printf("c1: %d, %d\n", c1.x, c1.y);
-  printf("c2: %d, %d\n", c2.x, c2.y);
-  printf("c3: %d, %d\n", c3.x, c3.y);
+int main() {
+  char *thing = get_full_greeting("hello world", "Danny", 100);
+  printf("%s", thing);
+  free(thing);
 }
