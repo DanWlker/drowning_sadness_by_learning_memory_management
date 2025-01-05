@@ -2,10 +2,13 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+#include <sys/_types/_u_int8_t.h>
 
+#include "limits.h"
 #include "src/coord.h"
 #include "src/exercise.h"
 
+const int max_buffer_size = 64;
 typedef struct {
   size_t length;
   char buffer[64];
@@ -14,7 +17,34 @@ int smart_append(TextBuffer* dest, const char* src) {
   if (!src || !dest) {
     return 1;
   }
-  return 0;
+
+  int lenSrc = strlen(src);
+  int usable_buffer_size =
+      max_buffer_size - 1;  // minus one for the null terminator
+  int remaining_length =
+      usable_buffer_size -
+      dest->length;  // not sure why this implicit minus is working
+
+  bool fullAppendPossible = remaining_length >= lenSrc;
+
+  strncat(dest->buffer, src, remaining_length);
+
+  if (fullAppendPossible) {
+    dest->length = dest->length + lenSrc;
+  } else {
+    dest->length = usable_buffer_size;
+  }
+
+  /*for (int i = remaining_length, j = 0;*/
+  /*     i > 0 && dest->length < max_buffer_size - 1 && j < lenSrc;*/
+  /*     i--, dest->length++, j++) {*/
+  /*  dest->buffer[dest->length] = src[j];*/
+  /*}*/
+  /**/
+  /*dest->buffer[dest->length + 1] = '\0';*/
+
+  return !fullAppendPossible;  // implicit conversion?, also need to flip cuz 0
+                               // is success
 }
 
 void concat_strings(char* str1, const char* str2) {
@@ -30,6 +60,30 @@ void concat_strings(char* str1, const char* str2) {
 
   *str1 = '\0';
 }
+
+void thingamajig(int* stuff) {
+  printf("thingamajig = %d", *(stuff + 17));
+  printf("\n");
+}
+
+typedef union {
+  int value;
+  unsigned int err;
+} val_or_err_t;
+
+typedef union {
+  days_of_week_t value;
+  int err;
+} dayzOrError;
+
+typedef union PacketHeader {
+  struct {
+    uint16_t src_port;
+    uint16_t dest_port;
+    uint32_t seq_num;
+  } tcp_header;
+  uint8_t raw[8];
+} packet_header_t;
 
 int main() {
   struct Coordinate c = {0};
@@ -93,6 +147,10 @@ int main() {
   int intArray[10];
   printf("Size of int array: %zu bytes\n", sizeof(intArray));
 
+  int* intArrPtr = intArray;
+  printf("Size of pointer of int array: %zu bytes\n", sizeof(intArrPtr));
+  thingamajig(points_start);
+
   int* intArray2[5];
   intArray2[0] = &value;
 
@@ -116,9 +174,62 @@ int main() {
   printf("%s\n", src);
   printf("%s\n", dest);
 
+  char src2[] =
+      " that will fill the whole buffer and leave no space for some of the "
+      "chars.";
   TextBuffer thingBuffer = {0};
-  int a = smart_append(NULL, src);
-  printf("%d", a);
+  strcpy(thingBuffer.buffer, "This is a long string");
+  thingBuffer.length = 21;
+  int a = smart_append(&thingBuffer, src2);
+  printf("%s\n", thingBuffer.buffer);
+  printf("%zu\n", thingBuffer.length);
+  printf("%d\n", a);
+
+  days_of_week_t dayz;
+  switch (dayz) {
+    case MON:
+    case TUES:
+    case WED:
+    case THURS:
+    case FRI:
+    case SAT:
+    case SUN:
+      break;
+  }
+
+  val_or_err_t lanes_score = {.value = -420};
+  printf("value (set): %d\n", lanes_score.value);
+  printf("err (unset): %u\n", lanes_score.err);
+
+  val_or_err_t teejs_score = {.err = UINT_MAX};
+  printf("value (unset): %d\n", teejs_score.value);
+  printf("err (set): %u\n", teejs_score.err);
+
+  dayzOrError nanann = {.value = MON};
+  printf("value (set): %u\n", nanann.value);
+  printf("err (unset): %u\n", nanann.err);
+
+  packet_header_t header;
+  header.tcp_header.src_port = 0x1234;
+  header.tcp_header.dest_port = 0x5678;
+  header.tcp_header.seq_num = 0x9ABCDEF0;
+
+  printf("%#080x\n", header.tcp_header.src_port);
+  printf("%#080x\n", header.tcp_header.dest_port);
+  printf("%#080x\n", header.tcp_header.seq_num);
+  printf("\n");
+
+  for (uint8_t i = 0; i < sizeof(header.raw) / sizeof(header.raw[0]); i++) {
+    /*munit_assert_uint8(header.raw[0], ==, 0x34, "[0] should be 0x34");*/
+    /*munit_assert_uint8(header.raw[1], ==, 0x12, "[1] should be 0x12");*/
+    /*munit_assert_uint8(header.raw[2], ==, 0x78, "[2] should be 0x78");*/
+    /*munit_assert_uint8(header.raw[3], ==, 0x56, "[3] should be 0x56");*/
+    /*munit_assert_uint8(header.raw[4], ==, 0xF0, "[4] should be 0xF0");*/
+    /*munit_assert_uint8(header.raw[5], ==, 0xDE, "[5] should be 0xDE");*/
+    /*munit_assert_uint8(header.raw[6], ==, 0xBC, "[6] should be 0xBC");*/
+    /*munit_assert_uint8(header.raw[7], ==, 0x9A, "[7] should be 0x9A");*/
+    printf("%#080x\n", header.raw[i]);
+  }
 
   return 0;
 }
